@@ -1,0 +1,90 @@
+@import "tailwindcss";
+
+@layer base {
+  body {
+    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  }
+}
+
+.font-western {
+  font-family: 'Rye', cursive, serif;
+}
+
+.font-serif-gold {
+  font-family: 'Cinzel', serif;
+}
+
+/* 3D Slot Cylinder & Perspective */
+.perspective-slot {
+  perspective: 1000px;
+  perspective-origin: 50% 50%;
+}
+
+.slot-cylinder {
+  transform-style: preserve-3d;
+}
+
+.slot-cell-3d {
+  backface-visibility: hidden;
+  transform: translateZ(20px);
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.slot-cell-3d:hover {
+  transform: translateZ(35px) scale(1.04);
+}
+
+/* Gold foil and saloon metallic gradients */
+.text-gold-gradient {
+  background: linear-gradient(180deg, #FFF9D2 0%, #F5C542 45%, #C98816 80%, #7A4B02 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.text-silver-gradient {
+  background: linear-gradient(180deg, #FFFFFF 0%, #CBD5E1 50%, #64748B 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.bg-gold-metallic {
+  background: linear-gradient(135deg, #FFDF70 0%, #D49A24 40%, #B87B12 70%, #F2CE52 100%);
+}
+
+.bg-saloon-wood {
+  background-color: #1c130d;
+  background-image: radial-gradient(#3d2415 1px, transparent 1px), radial-gradient(#2b190f 1px, #1a0f09 1px);
+  background-size: 20px 20px;
+  background-position: 0 0, 10px 10px;
+}
+
+/* Reel blur effect during spin */
+.reel-blur {
+  filter: blur(2.5px);
+}
+
+/* Custom glow */
+.bounty-glow {
+  box-shadow: 0 0 25px rgba(245, 197, 66, 0.35), inset 0 0 15px rgba(245, 197, 66, 0.2);
+}
+
+.bounty-glow-red {
+  box-shadow: 0 0 25px rgba(239, 68, 68, 0.4), inset 0 0 15px rgba(239, 68, 68, 0.25);
+}
+
+/* Anticipation border pulse */
+@keyframes anticipation-pulse {
+  0%, 100% {
+    box-shadow: 0 0 15px #f59e0b, inset 0 0 10px #f59e0b;
+    border-color: #fbbf24;
+  }
+  50% {
+    box-shadow: 0 0 30px #ef4444, inset 0 0 20px #ef4444;
+    border-color: #f87171;
+  }
+}
+
+.anticipation-glow {
+  animation: anticipation-pulse 0.8s infinite ease-in-out;
+}
+
