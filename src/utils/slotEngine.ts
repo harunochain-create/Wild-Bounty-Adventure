@@ -1,21 +1,52 @@
-import { CascadeStep, SlotSymbol, SpinExecutionResult, SymbolId, WinningWay } from '../types/slot';
+import {
+  CascadeStep,
+  GridTile,
+  ShiftedTileInfo,
+  SlotSymbol,
+  SpinExecutionResult,
+  SymbolId,
+  WinningWay,
+} from '../types/slot';
 
-// 6 Generated High-Quality Game Assets
-export const COWGIRL_WILD_IMG = '/src/assets/images/cowgirl_wild_1791021656800.jpg';
-export const OUTLAW_BANDIT_IMG = '/src/assets/images/outlaw_bandit_1791021670350.jpg';
-export const GOLD_BARS_SCATTER_IMG = '/src/assets/images/gold_bars_scatter_1791021682021.jpg';
-export const REVOLVERS_HOLSTER_IMG = '/src/assets/images/revolvers_holster_1791021695119.jpg';
-export const WHISKEY_DECANTER_IMG = '/src/assets/images/whiskey_decanter_1791021712789.jpg';
-export const PURPLE_COWBOY_HAT_IMG = '/src/assets/images/purple_cowboy_hat_1791021725245.jpg';
+import cowgirlWildImg from '../assets/images/cowgirl_wild_1791021656800.jpg';
+import outlawBanditImg from '../assets/images/outlaw_bandit_1791021670350.jpg';
+import goldBarsScatterImg from '../assets/images/gold_bars_scatter_1791021682021.jpg';
+import revolversHolsterImg from '../assets/images/revolvers_holster_1791021695119.jpg';
+import whiskeyDecanterImg from '../assets/images/whiskey_decanter_1791021712789.jpg';
+import purpleCowboyHatImg from '../assets/images/purple_cowboy_hat_1791021725245.jpg';
+import letterAImg from '../assets/images/letter_a.png';
+import letterKImg from '../assets/images/letter_k.png';
+import letterQImg from '../assets/images/letter_q.png';
+import letterJImg from '../assets/images/letter_j.png';
 
-// Exact 3600 WAYS layout: [3, 4, 5, 5, 4, 3] -> 3 * 4 * 5 * 5 * 4 * 3 = 3600
+// 10 Original Game Asset PNGs
+export const COWGIRL_WILD_IMG = cowgirlWildImg;
+export const OUTLAW_BANDIT_IMG = outlawBanditImg;
+export const GOLD_BARS_SCATTER_IMG = goldBarsScatterImg;
+export const REVOLVERS_HOLSTER_IMG = revolversHolsterImg;
+export const WHISKEY_DECANTER_IMG = whiskeyDecanterImg;
+export const PURPLE_COWBOY_HAT_IMG = purpleCowboyHatImg;
+export const LETTER_A_IMG = letterAImg;
+export const LETTER_K_IMG = letterKImg;
+export const LETTER_Q_IMG = letterQImg;
+export const LETTER_J_IMG = letterJImg;
+
+// Exact 3-4-5-5-4-3 Shield Grid: 24 tiles total
+export const NUM_COLUMNS = 6;
+export const MAX_ROWS = 5;
 export const REEL_ROW_COUNTS = [3, 4, 5, 5, 4, 3] as const;
+
+let globalTileCounter = 0;
+export function nextTileId(): string {
+  globalTileCounter++;
+  return `tile_${Date.now()}_${globalTileCounter}_${Math.random().toString(36).substring(2, 6)}`;
+}
 
 export const SYMBOLS: Record<SymbolId, SlotSymbol> = {
   WILD: {
     id: 'WILD',
     name: 'Cowgirl Wild',
-    payouts: [0, 0, 0, 0], // Wild substitutes all paying symbols
+    payouts: [0, 0, 0], // Wild substitutes for the regular symbol with highest count
     isWild: true,
     color: '#F59E0B',
     image: COWGIRL_WILD_IMG,
@@ -23,7 +54,7 @@ export const SYMBOLS: Record<SymbolId, SlotSymbol> = {
   SCATTER: {
     id: 'SCATTER',
     name: 'Gold Bars Scatter',
-    payouts: [0, 0, 0, 0], // Scatter awards 10 Free Spins and Level Up!
+    payouts: [0, 0, 0], // 3+ Scatters award 10 Free Spins
     isScatter: true,
     color: '#EF4444',
     image: GOLD_BARS_SCATTER_IMG,
@@ -31,54 +62,58 @@ export const SYMBOLS: Record<SymbolId, SlotSymbol> = {
   BANDIT: {
     id: 'BANDIT',
     name: 'Outlaw Bandit',
-    payouts: [20, 50, 100, 200],
+    payouts: [8, 20, 40], // 6-7, 8-9, 10+
     color: '#EF4444',
     image: OUTLAW_BANDIT_IMG,
   },
   REVOLVERS: {
     id: 'REVOLVERS',
     name: 'Dual Revolvers',
-    payouts: [15, 30, 60, 120],
+    payouts: [4, 10, 20],
     color: '#F59E0B',
     image: REVOLVERS_HOLSTER_IMG,
   },
   HAT: {
     id: 'HAT',
     name: 'Cowboy Hat',
-    payouts: [10, 20, 40, 80],
+    payouts: [2.5, 6, 12],
     color: '#A855F7',
     image: PURPLE_COWBOY_HAT_IMG,
   },
   WHISKEY: {
     id: 'WHISKEY',
     name: 'Saloon Whiskey',
-    payouts: [8, 15, 30, 60],
+    payouts: [1.5, 4, 8],
     color: '#D97706',
     image: WHISKEY_DECANTER_IMG,
   },
   A: {
     id: 'A',
     name: 'Golden Ace',
-    payouts: [5, 10, 20, 40],
+    payouts: [1.0, 2.0, 6],
     color: '#FBBF24',
+    image: LETTER_A_IMG,
   },
   K: {
     id: 'K',
     name: 'Crimson King',
-    payouts: [5, 10, 20, 40],
+    payouts: [0.8, 1.5, 5],
     color: '#DC2626',
+    image: LETTER_K_IMG,
   },
   Q: {
     id: 'Q',
     name: 'Sage Queen',
-    payouts: [3, 6, 12, 25],
+    payouts: [0.6, 1.2, 4],
     color: '#10B981',
+    image: LETTER_Q_IMG,
   },
   J: {
     id: 'J',
     name: 'Frontier Jack',
-    payouts: [3, 6, 12, 25],
+    payouts: [0.4, 0.8, 3],
     color: '#3B82F6',
+    image: LETTER_J_IMG,
   },
 };
 
@@ -94,16 +129,16 @@ export const LEVEL_CONFIGS = [
 ];
 
 export const REEL_WEIGHTS: { symbol: SymbolId; weight: number }[] = [
-  { symbol: 'J', weight: 22 },
-  { symbol: 'Q', weight: 20 },
-  { symbol: 'K', weight: 18 },
-  { symbol: 'A', weight: 16 },
-  { symbol: 'WHISKEY', weight: 13 },
-  { symbol: 'HAT', weight: 11 },
-  { symbol: 'REVOLVERS', weight: 9 },
-  { symbol: 'BANDIT', weight: 7 },
-  { symbol: 'WILD', weight: 4 }, // Wild appears on reels 2, 3, 4, 5
-  { symbol: 'SCATTER', weight: 5 }, // Scatter gives exciting level progression & 10 free spins
+  { symbol: 'J', weight: 26 },
+  { symbol: 'Q', weight: 24 },
+  { symbol: 'K', weight: 22 },
+  { symbol: 'A', weight: 20 },
+  { symbol: 'WHISKEY', weight: 16 },
+  { symbol: 'HAT', weight: 14 },
+  { symbol: 'REVOLVERS', weight: 12 },
+  { symbol: 'BANDIT', weight: 10 },
+  { symbol: 'WILD', weight: 6 }, // WILD can appear on ALL columns
+  { symbol: 'SCATTER', weight: 5 }, // 4+ triggers 10 free spins
 ];
 
 // Cryptographic RNG
@@ -128,24 +163,19 @@ export function hashToFloat(hexString: string): number {
   return intVal / 0xffffffff;
 }
 
-export function getRandomSymbol(seedFloat: number, reelIndex: number, level: number): SymbolId {
-  // Wild cannot appear on reel 0 or 5 in 3600 ways games
-  const filtered = REEL_WEIGHTS.map((item) => {
+export function getRandomSymbol(seedFloat: number, level: number): SymbolId {
+  const weights = REEL_WEIGHTS.map((item) => {
     let w = item.weight;
-    if ((reelIndex === 0 || reelIndex === 5) && item.symbol === 'WILD') {
-      w = 0;
-    }
-    // High level perks
     if (level >= 3 && (item.symbol === 'BANDIT' || item.symbol === 'WILD')) {
       w += 3;
     }
     return { symbol: item.symbol, weight: w };
-  }).filter((i) => i.weight > 0);
+  });
 
-  const totalWeight = filtered.reduce((acc, curr) => acc + curr.weight, 0);
+  const totalWeight = weights.reduce((acc, curr) => acc + curr.weight, 0);
   let threshold = seedFloat * totalWeight;
 
-  for (const item of filtered) {
+  for (const item of weights) {
     if (threshold < item.weight) {
       return item.symbol;
     }
@@ -154,174 +184,285 @@ export function getRandomSymbol(seedFloat: number, reelIndex: number, level: num
   return 'J';
 }
 
-// Generate an initial 6-reel grid: [3, 4, 5, 5, 4, 3]
-export function generateInitialGrid(level: number): SymbolId[][] {
-  const grid: SymbolId[][] = [];
-  for (let reel = 0; reel < REEL_ROW_COUNTS.length; reel++) {
-    const numRows = REEL_ROW_COUNTS[reel];
-    const col: SymbolId[] = [];
-    for (let row = 0; row < numRows; row++) {
-      const floatVal = Math.random();
-      col.push(getRandomSymbol(floatVal, reel, level));
+// Generate an initial 3-4-5-5-4-3 shield grid (24 tiles total)
+export function generateInitialTileGrid(level: number): GridTile[][] {
+  const grid: GridTile[][] = [];
+  for (let col = 0; col < NUM_COLUMNS; col++) {
+    const rowCount = REEL_ROW_COUNTS[col];
+    const colTiles: GridTile[] = [];
+    for (let row = 0; row < rowCount; row++) {
+      colTiles.push({
+        id: nextTileId(),
+        symbol: getRandomSymbol(Math.random(), level),
+        col,
+        row,
+      });
     }
-    grid.push(col);
+    grid.push(colTiles);
   }
   return grid;
 }
 
-// Evaluate 3600 Ways wins across the 6 reels
-export function evaluateWays(grid: SymbolId[][], baseBet: number): {
+// Evaluate Pay Anywhere for 24-tile Shield Grid:
+// - Symbols win if count >= 6 anywhere on the 24-tile grid.
+// - No adjacent rule, no left-to-right requirement.
+// - Tiers: 6-7 (payouts[0]), 8-9 (payouts[1]), 10+ (payouts[2]).
+// - WILD substitutes for the regular symbol with the highest count, appearing on all columns.
+export function evaluatePayAnywhere(grid: GridTile[][], totalBet: number): {
   winningWays: WinningWay[];
   totalPayout: number;
+  winningTileIds: string[];
 } {
   const regularSymbols: SymbolId[] = ['BANDIT', 'REVOLVERS', 'HAT', 'WHISKEY', 'A', 'K', 'Q', 'J'];
-  const winningWays: WinningWay[] = [];
-  let totalPayout = 0;
+  const symbolTilesMap: Record<SymbolId, GridTile[]> = {
+    BANDIT: [],
+    REVOLVERS: [],
+    HAT: [],
+    WHISKEY: [],
+    A: [],
+    K: [],
+    Q: [],
+    J: [],
+    WILD: [],
+    SCATTER: [],
+  };
 
-  for (const targetSym of regularSymbols) {
-    let consecutiveReels = 0;
-    let waysMultiplier = 1;
-    const positions: { reel: number; row: number }[] = [];
-
-    for (let reel = 0; reel < grid.length; reel++) {
-      const matchingRowsOnReel: number[] = [];
-      for (let row = 0; row < grid[reel].length; row++) {
-        const s = grid[reel][row];
-        if (s === targetSym || s === 'WILD') {
-          matchingRowsOnReel.push(row);
-          positions.push({ reel, row });
-        }
-      }
-
-      if (matchingRowsOnReel.length > 0) {
-        consecutiveReels++;
-        waysMultiplier *= matchingRowsOnReel.length;
-      } else {
-        break; // Ways must be strictly adjacent from reel 0
+  // Collect tiles across all 24 tiles
+  for (let col = 0; col < NUM_COLUMNS; col++) {
+    const rowCount = REEL_ROW_COUNTS[col];
+    for (let row = 0; row < rowCount; row++) {
+      const tile = grid[col]?.[row];
+      if (tile) {
+        symbolTilesMap[tile.symbol]?.push(tile);
       }
     }
+  }
 
-    if (consecutiveReels >= 3) {
-      const symConfig = SYMBOLS[targetSym];
-      const payoutIndex = consecutiveReels - 3; // 3 reels -> index 0, 4 -> 1, 5 -> 2, 6 -> 3
-      const basePay = symConfig.payouts[payoutIndex] || 0;
-      const wayWin = (baseBet / 20) * (basePay / 10) * waysMultiplier;
+  const wildTiles = symbolTilesMap.WILD;
+  const wildCount = wildTiles.length;
 
-      totalPayout += wayWin;
+  // Find regular symbol with highest natural count to assign WILDs
+  let bestRegularSymbol: SymbolId = 'BANDIT';
+  let maxCount = -1;
+
+  for (const sym of regularSymbols) {
+    const count = symbolTilesMap[sym].length;
+    if (count > maxCount) {
+      maxCount = count;
+      bestRegularSymbol = sym;
+    }
+  }
+
+  const winningWays: WinningWay[] = [];
+  const winningTileIdSet = new Set<string>();
+  let totalPayout = 0;
+
+  for (const sym of regularSymbols) {
+    const naturalTiles = symbolTilesMap[sym];
+    let totalCount = naturalTiles.length;
+    const combinedTiles = [...naturalTiles];
+
+    // Assign WILD to the symbol with the highest count
+    if (sym === bestRegularSymbol && wildCount > 0) {
+      totalCount += wildCount;
+      combinedTiles.push(...wildTiles);
+    }
+
+    if (totalCount >= 6) {
+      const symConfig = SYMBOLS[sym];
+      // Tiers: 6-7 (idx 0), 8-9 (idx 1), 10+ (idx 2)
+      let tierIdx = 0;
+      if (totalCount >= 10) tierIdx = 2;
+      else if (totalCount >= 8) tierIdx = 1;
+
+      const payoutMultiplier = symConfig.payouts[tierIdx];
+      const winAmount = totalBet * payoutMultiplier;
+
+      const winningIds = combinedTiles.map((t) => t.id);
+      winningIds.forEach((id) => winningTileIdSet.add(id));
+
+      totalPayout += winAmount;
       winningWays.push({
-        symbol: targetSym,
-        reelCount: consecutiveReels,
-        totalWays: waysMultiplier,
-        payout: wayWin,
-        symbolPositions: positions.filter((p) => p.reel < consecutiveReels),
+        symbol: sym,
+        count: totalCount,
+        payout: winAmount,
+        symbolPositions: combinedTiles.map((t) => ({ reel: t.col, row: t.row })),
+        winningTileIds: winningIds,
       });
     }
   }
 
-  return { winningWays, totalPayout };
+  return {
+    winningWays,
+    totalPayout,
+    winningTileIds: Array.from(winningTileIdSet),
+  };
 }
 
-// Full Cascade Step Engine:
-// 1. Evaluates winning ways
-// 2. Removes winning symbols
-// 3. Drops surviving symbols down
-// 4. Fills top rows with newly dropped symbols from above
-// 5. Multiplier doubles on each cascade!
+// Full Cascade Step Engine for 24-tile Shield Grid:
+// - Evaluates 6+ scatter-pays
+// - Identifies exploded tiles
+// - Surviving tiles fall down by gravity per column
+// - Fresh tiles enter from above the frame with isNew: true
 export function executeFullCascadeSpin(
-  initialGrid: SymbolId[][],
+  initialGrid: GridTile[][],
   totalBet: number,
   currentLevel: number,
   scattersCollected: number,
   isFreeSpins: boolean = false
 ): SpinExecutionResult {
   const steps: CascadeStep[] = [];
-  let currentGrid = initialGrid.map((col) => [...col]);
+  // Clone grid of GridTiles
+  let currentGrid: GridTile[][] = initialGrid.map((colTiles) =>
+    colTiles.map((tile) => ({ ...tile }))
+  );
   const multipliersTrack = isFreeSpins ? FREE_SPIN_MULTIPLIERS : BASE_MULTIPLIERS;
   let cascadeIndex = 0;
   let totalWin = 0;
   let totalScatters = 0;
   const scatterPositions: { reel: number; row: number }[] = [];
 
-  // Count initial scatters on the board
-  for (let r = 0; r < currentGrid.length; r++) {
-    for (let row = 0; row < currentGrid[r].length; row++) {
-      if (currentGrid[r][row] === 'SCATTER') {
+  // Count initial scatters on the 24 tiles
+  for (let col = 0; col < NUM_COLUMNS; col++) {
+    const rowCount = REEL_ROW_COUNTS[col];
+    for (let row = 0; row < rowCount; row++) {
+      if (currentGrid[col]?.[row]?.symbol === 'SCATTER') {
         totalScatters++;
-        scatterPositions.push({ reel: r, row });
+        scatterPositions.push({ reel: col, row });
       }
     }
   }
 
-  // Loop cascades until no more winning ways form
   while (cascadeIndex < 10) {
-    const { winningWays, totalPayout } = evaluateWays(currentGrid, totalBet);
+    const { winningWays, totalPayout, winningTileIds } = evaluatePayAnywhere(currentGrid, totalBet);
     const currentMultiplier = multipliersTrack[Math.min(cascadeIndex, multipliersTrack.length - 1)];
     const stepWin = Math.round(totalPayout * currentMultiplier);
     totalWin += stepWin;
 
+    // Snapshot current grid with isWinning flags marked
+    const markedGrid: GridTile[][] = currentGrid.map((colTiles) =>
+      colTiles.map((t) => ({
+        ...t,
+        isWinning: winningTileIds.includes(t.id),
+      }))
+    );
+
+    const explodedTiles: GridTile[] = [];
+    currentGrid.forEach((colTiles) => {
+      colTiles.forEach((t) => {
+        if (winningTileIds.includes(t.id)) {
+          explodedTiles.push(t);
+        }
+      });
+    });
+
+    if (winningWays.length === 0) {
+      steps.push({
+        grid: markedGrid,
+        winningTileIds: [],
+        winningWays: [],
+        multiplier: currentMultiplier,
+        stepWin: 0,
+        scatterCount: cascadeIndex === 0 ? totalScatters : 0,
+        scatterPositions: cascadeIndex === 0 ? scatterPositions : [],
+        explodedTiles: [],
+        shiftedTiles: [],
+        newTiles: [],
+      });
+      break; // No wins, cascade ends
+    }
+
+    // CASCADE PHYSICS (Gravity per column):
+    const nextGrid: GridTile[][] = [];
+    const shiftedTiles: ShiftedTileInfo[] = [];
+    const allNewTilesInStep: GridTile[] = [];
+
+    for (let col = 0; col < NUM_COLUMNS; col++) {
+      const colRowCount = REEL_ROW_COUNTS[col];
+      // Surviving tiles in this column
+      const surviving = currentGrid[col].filter((t) => !winningTileIds.includes(t.id));
+      const neededCount = colRowCount - surviving.length;
+
+      // Surviving tiles shift down by neededCount
+      const updatedSurviving: GridTile[] = surviving.map((t, idx) => {
+        const targetRow = neededCount + idx;
+        if (t.row !== targetRow) {
+          shiftedTiles.push({
+            id: t.id,
+            col,
+            fromRow: t.row,
+            toRow: targetRow,
+          });
+        }
+        return {
+          ...t,
+          row: targetRow,
+          isWinning: false,
+          isNew: false,
+        };
+      });
+
+      // New tiles entering from top of column
+      const newColTiles: GridTile[] = [];
+      for (let r = 0; r < neededCount; r++) {
+        const newTile: GridTile = {
+          id: nextTileId(),
+          symbol: getRandomSymbol(Math.random(), currentLevel),
+          col,
+          row: r,
+          isWinning: false,
+          isNew: true,
+        };
+        newColTiles.push(newTile);
+        allNewTilesInStep.push(newTile);
+      }
+
+      nextGrid.push([...newColTiles, ...updatedSurviving]);
+    }
+
     steps.push({
-      grid: currentGrid.map((c) => [...c]),
+      grid: markedGrid,
+      winningTileIds,
       winningWays,
       multiplier: currentMultiplier,
       stepWin,
       scatterCount: cascadeIndex === 0 ? totalScatters : 0,
       scatterPositions: cascadeIndex === 0 ? scatterPositions : [],
+      explodedTiles,
+      shiftedTiles,
+      newTiles: allNewTilesInStep,
     });
-
-    if (winningWays.length === 0) {
-      break; // No more wins, cascade ends
-    }
-
-    // Set of winning coordinates to remove
-    const winningCoordsSet = new Set<string>();
-    winningWays.forEach((way) => {
-      way.symbolPositions.forEach((pos) => {
-        winningCoordsSet.add(`${pos.reel},${pos.row}`);
-      });
-    });
-
-    // CASCADE PHYSICS (FALL DOWN):
-    // For each column: keep surviving symbols, drop them to bottom, spawn fresh symbols at top
-    const nextGrid: SymbolId[][] = [];
-    for (let r = 0; r < currentGrid.length; r++) {
-      const maxRows = REEL_ROW_COUNTS[r];
-      // Surviving symbols in this reel (those NOT in winningCoordsSet)
-      const surviving = currentGrid[r].filter((_, rowIdx) => !winningCoordsSet.has(`${r},${rowIdx}`));
-      const neededCount = maxRows - surviving.length;
-
-      // Generate new symbols falling in from top
-      const newFallingSymbols: SymbolId[] = [];
-      for (let n = 0; n < neededCount; n++) {
-        newFallingSymbols.push(getRandomSymbol(Math.random(), r, currentLevel));
-      }
-
-      // New symbols enter from top, followed by surviving falling symbols
-      nextGrid.push([...newFallingSymbols, ...surviving]);
-    }
 
     currentGrid = nextGrid;
     cascadeIndex++;
   }
 
-  // Level Progression & Scatter Rules:
-  // "jika dapat Scatter maka dapat 10 free spin"
-  // "Syarat naik level jika dapat 1 Scatter maka akan naik level berikutnya. jika level 2 ingin naik ke level 3 harus dapat 2 Scatter dulu dan seterusnya"
+  // Scatter & Free Spins Rule:
+  // - Mode normal: 3 scatter = 10 free spin, tiap scatter tambahan = +2 free spin.
+  // - Saat free spin berjalan: 3 atau lebih scatter hanya menambah 5 free spin (tetap 5).
   let levelUpOccurred = false;
   let newLevel = currentLevel;
   let awardedFreeSpins = 0;
 
-  if (totalScatters > 0) {
-    // Award 10 Free Spins whenever Scatter hits!
-    awardedFreeSpins = 10;
+  if (totalScatters >= 3) {
+    if (isFreeSpins) {
+      awardedFreeSpins = 5; // Retrigger gives fixed 5 free spins
+    } else {
+      awardedFreeSpins = 10 + (totalScatters - 3) * 2;
+    }
+  }
 
-    const currentCfg = LEVEL_CONFIGS[currentLevel - 1] || LEVEL_CONFIGS[0];
-    const req = currentCfg.reqScatters;
+  const currentCfg = LEVEL_CONFIGS[currentLevel - 1] || LEVEL_CONFIGS[0];
+  const req = currentCfg.reqScatters;
 
-    if (totalScatters >= req || (scattersCollected + totalScatters) >= req) {
-      if (currentLevel < 5) {
-        newLevel = currentLevel + 1;
-        levelUpOccurred = true;
-      }
+  if (totalScatters >= req || (scattersCollected + totalScatters) >= req) {
+    if (currentLevel < 5) {
+      newLevel = currentLevel + 1;
+      levelUpOccurred = true;
+    }
+    // If leveled up with at least 3 scatters, ensure awardedFreeSpins is calculated
+    if (awardedFreeSpins === 0 && totalScatters >= 3) {
+      awardedFreeSpins = isFreeSpins ? 5 : 10 + (totalScatters - 3) * 2;
     }
   }
 

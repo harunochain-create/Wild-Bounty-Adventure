@@ -26,6 +26,7 @@ interface PaymentModalProps {
   onDepositSuccess: (amount: number, transaction: Transaction) => void;
   onWithdrawSuccess: (amount: number, transaction: Transaction) => void;
   transactions: Transaction[];
+  initialTab?: 'DEPOSIT' | 'WITHDRAW' | 'HISTORY';
 }
 
 export const PaymentModal: React.FC<PaymentModalProps> = ({
@@ -36,8 +37,15 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({
   onDepositSuccess,
   onWithdrawSuccess,
   transactions,
+  initialTab = 'DEPOSIT',
 }) => {
-  const [activeTab, setActiveTab] = useState<'DEPOSIT' | 'WITHDRAW' | 'HISTORY'>('DEPOSIT');
+  const [activeTab, setActiveTab] = useState<'DEPOSIT' | 'WITHDRAW' | 'HISTORY'>(initialTab);
+
+  React.useEffect(() => {
+    if (isOpen && initialTab) {
+      setActiveTab(initialTab);
+    }
+  }, [isOpen, initialTab]);
   const [depositMethod, setDepositMethod] = useState<'QRIS' | 'VA' | 'EWALLET' | 'CARD' | 'CRYPTO'>('QRIS');
   const [depositAmount, setDepositAmount] = useState<number>(currency === 'IDR' ? 100000 : 50);
   const [selectedBank, setSelectedBank] = useState<string>('BCA');

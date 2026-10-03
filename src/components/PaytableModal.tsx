@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { HelpCircle, Star, Sparkles, X, Flame, Shield, Award } from 'lucide-react';
+import { HelpCircle, X, Flame } from 'lucide-react';
 import { LEVEL_CONFIGS, SYMBOLS } from '../utils/slotEngine';
+import { SlotSymbolGraphic } from './SlotSymbolGraphic';
 
 interface PaytableModalProps {
   isOpen: boolean;
@@ -13,12 +14,12 @@ export const PaytableModal: React.FC<PaytableModalProps> = ({
   onClose,
   currentLevel,
 }) => {
-  const [tab, setTab] = useState<'3600_WAYS' | 'SCATTER_LEVELS' | 'PAYTABLE'>('3600_WAYS');
+  const [tab, setTab] = useState<'PAY_ANYWHERE' | 'SCATTER_LEVELS' | 'PAYTABLE'>('PAY_ANYWHERE');
 
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/85 backdrop-blur-md animate-in fade-in duration-200">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/85 backdrop-blur-md animate-in fade-in duration-200 select-none">
       <div className="relative w-full max-w-2xl bg-[#1c0e07] border-2 border-[#824c20] rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
         {/* Header */}
         <div className="flex items-center justify-between px-6 py-4 border-b border-[#523015] bg-[#120804]">
@@ -28,19 +29,19 @@ export const PaytableModal: React.FC<PaytableModalProps> = ({
             </div>
             <div>
               <div className="text-sm font-bold text-stone-100 flex items-center gap-2">
-                <span>Rules & 3600 Ways Paytable</span>
-                <span className="text-[10px] px-2 py-0.5 rounded bg-amber-950 text-amber-400 border border-amber-800 font-mono">
-                  WILD BOUNTY
+                <span>Rules & Pay Anywhere Paytable</span>
+                <span className="text-[10px] px-2 py-0.5 rounded bg-amber-950 text-amber-400 border border-amber-800 font-mono font-bold">
+                  SHIELD 3-4-5-5-4-3 (24 TILES)
                 </span>
               </div>
               <div className="text-xs text-stone-400">
-                3600 Ways to Win, Falling Cascades & 10 Free Spins
+                Pay Anywhere (6+ Match), Sequential Gravity & 10 Free Spins
               </div>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="p-1.5 rounded-lg text-stone-400 hover:text-white hover:bg-stone-800 transition-colors"
+            className="p-1.5 rounded-lg text-stone-400 hover:text-white hover:bg-stone-800 transition-colors cursor-pointer"
           >
             <X className="w-5 h-5" />
           </button>
@@ -49,53 +50,53 @@ export const PaytableModal: React.FC<PaytableModalProps> = ({
         {/* Tab switcher */}
         <div className="flex border-b border-[#523015] bg-[#140b05]">
           <button
-            onClick={() => setTab('3600_WAYS')}
-            className={`flex-1 py-3 text-xs font-semibold transition-colors ${
-              tab === '3600_WAYS'
+            onClick={() => setTab('PAY_ANYWHERE')}
+            className={`flex-1 py-3 text-xs font-semibold transition-colors cursor-pointer ${
+              tab === 'PAY_ANYWHERE'
                 ? 'text-amber-400 border-b-2 border-amber-400 bg-amber-500/5'
                 : 'text-stone-400 hover:text-stone-200'
             }`}
           >
-            💥 3600 Ways & Cascades
+            💥 Pay Anywhere (6+)
           </button>
           <button
             onClick={() => setTab('SCATTER_LEVELS')}
-            className={`flex-1 py-3 text-xs font-semibold transition-colors ${
+            className={`flex-1 py-3 text-xs font-semibold transition-colors cursor-pointer ${
               tab === 'SCATTER_LEVELS'
                 ? 'text-amber-400 border-b-2 border-amber-400 bg-amber-500/5'
                 : 'text-stone-400 hover:text-stone-200'
             }`}
           >
-            ⭐ Scatter & 10 Free Spins
+            ⭐ 3+ Scatter & Free Spins
           </button>
           <button
             onClick={() => setTab('PAYTABLE')}
-            className={`flex-1 py-3 text-xs font-semibold transition-colors ${
+            className={`flex-1 py-3 text-xs font-semibold transition-colors cursor-pointer ${
               tab === 'PAYTABLE'
                 ? 'text-amber-400 border-b-2 border-amber-400 bg-amber-500/5'
                 : 'text-stone-400 hover:text-stone-200'
             }`}
           >
-            💰 Symbol Payouts
+            💰 Symbol Payouts (6-7, 8-9, 10+)
           </button>
         </div>
 
         {/* Body */}
         <div className="p-6 overflow-y-auto space-y-4">
-          {tab === '3600_WAYS' && (
+          {tab === 'PAY_ANYWHERE' && (
             <div className="space-y-4">
               <div className="p-4 rounded-xl bg-[#2a160c] border border-[#6b3c18] space-y-2">
-                <h4 className="font-western text-amber-300 text-sm">Bagaimana Cara Kerja 3600 Ways & Simbol Turun?</h4>
+                <h4 className="font-western text-amber-300 text-sm">Aturan Menang: Pay Anywhere (6+ Match)</h4>
                 <p className="text-xs text-stone-300 leading-relaxed">
-                  Grid permainan terdiri dari 6 kolom dengan formasi baris <span className="font-bold text-amber-400">3 - 4 - 5 - 5 - 4 - 3</span>.
-                  Total cara menang dihitung dari perkalian simbol yang sama pada kolom bersebelahan:
-                  <span className="font-mono text-amber-300 block my-1 font-bold">3 × 4 × 5 × 5 × 4 × 3 = 3.600 CARA MENANG (WAYS)!</span>
+                  Grid permainan berbentuk <span className="font-bold text-amber-400">Perisai 6 Kolom [3, 4, 5, 5, 4, 3] = 24 ubin</span>.
+                  Simbol membayar jika muncul <span className="font-bold text-amber-300">6 atau lebih simbol yang sama di mana saja</span> pada papan!
                 </p>
-                <p className="text-xs text-stone-300 leading-relaxed">
-                  <span className="text-yellow-400 font-semibold">Simbol Turun (Cascade / Tumble):</span> Simbol yang menang akan meledak dan lenyap,
-                  kemudian simbol-simbol di atasnya akan jatuh turun ke bawah dan simbol baru meluncur dari atas.
-                  Setiap kali terjadi kemenangan beruntun, <span className="text-amber-400 font-bold">Multiplier Berganda (x1 → x2 → x4 → x8 → x16 ... x1024)</span> pada papan kayu gantung!
-                </p>
+                <ul className="text-xs text-stone-300 space-y-1.5 list-disc pl-4">
+                  <li>Tidak perlu bersebelahan atau membentuk pola garis.</li>
+                  <li><span className="text-yellow-400 font-semibold">WILD (Cowgirl):</span> Menggantikan simbol biasa (bukan Scatter) dan otomatis dihitung ke simbol biasa dengan jumlah terbanyak. WILD dapat muncul di semua kolom!</li>
+                  <li><span className="text-yellow-400 font-semibold">Animasi Jatuh:</span> Mode Normal simbol jatuh berurutan dari kiri ke kanan (jeda 0.1s antar kolom). Mode Turbo simbol jatuh serentak (0.2s).</li>
+                  <li><span className="text-yellow-400 font-semibold">Tumble & Multiplier:</span> Simbol menang membesar lalu pecah bersamaan. Simbol di atasnya jatuh mengisi kekosongan, dan simbol baru turun dari atas. Setiap tumble berturut-turut melipatgandakan multiplier gantung!</li>
+                </ul>
               </div>
             </div>
           )}
@@ -105,18 +106,20 @@ export const PaytableModal: React.FC<PaytableModalProps> = ({
               <div className="p-3.5 rounded-xl bg-gradient-to-r from-amber-950/60 to-[#221208] border border-amber-600/40">
                 <div className="text-xs font-bold text-amber-300 uppercase tracking-wide mb-1 flex items-center gap-1.5">
                   <Flame className="w-4 h-4 text-red-500" />
-                  Aturan Scatter & 10 Free Spins:
+                  Aturan Scatter (Emas Batangan) & Free Spins:
                 </div>
-                <div className="text-xs text-stone-200 leading-relaxed space-y-1">
+                <div className="text-xs text-stone-200 leading-relaxed space-y-1.5">
                   <div>
-                    🔥 <span className="text-amber-400 font-bold">Dapat Scatter = Otomatis Mendapatkan 10 FREE SPINS!</span>
+                    🔥 <span className="text-amber-400 font-bold">Minimal 3 SCATTER (Emas Batangan) = 10 Free Spins!</span>
                   </div>
                   <div>
-                    ⭐ <span className="text-amber-400 font-bold">Aturan Naik Level:</span>
-                    Level 1 butuh 1 Scatter untuk naik ke Level 2. Di Level 2 butuh 2 Scatter untuk ke Level 3, dst.
+                    ✨ Setiap Scatter tambahan di atas 3 memberikan <span className="text-amber-300 font-bold">+2 Free Spins</span> (4 Scatter = 12 FS, 5 Scatter = 14 FS, dst).
                   </div>
                   <div>
-                    ⚡ Di mode Free Spins, Multiplier gantung dimulai dari angka tinggi <span className="text-amber-300 font-bold">x8</span> dan terus berlipat ganda hingga <span className="text-amber-300 font-bold">x1024</span>!
+                    🔄 <span className="text-amber-400 font-bold">Retrigger saat Free Spins:</span> 3 atau lebih Scatter menambah tepat <span className="text-amber-300 font-bold">5 Free Spins</span>!
+                  </div>
+                  <div>
+                    ⚡ Di mode Free Spins, Multiplier gantung dimulai dari <span className="text-amber-300 font-bold">X8</span> dan berlipat ganda setiap tumble hingga <span className="text-amber-300 font-bold">X1024</span>!
                   </div>
                 </div>
               </div>
@@ -155,14 +158,14 @@ export const PaytableModal: React.FC<PaytableModalProps> = ({
                             )}
                           </div>
                           <div className="text-[11px] text-stone-400">
-                            Req: {cfg.reqScatters} Scatter{cfg.reqScatters > 1 ? 's' : ''} → Hadiah 10 Free Spins!
+                            Req Level Up: {cfg.reqScatters} Scatter{cfg.reqScatters > 1 ? 's' : ''} (3+ Scatters = 10 Free Spins)
                           </div>
                         </div>
                       </div>
 
                       <div className="text-right">
                         <span className="text-xs font-mono font-bold text-amber-400">
-                          {cfg.level === 1 ? 'Base' : `Tier ${cfg.level} Multipliers`}
+                          {cfg.level === 1 ? 'Base' : `Tier ${cfg.level}`}
                         </span>
                       </div>
                     </div>
@@ -174,8 +177,27 @@ export const PaytableModal: React.FC<PaytableModalProps> = ({
 
           {tab === 'PAYTABLE' && (
             <div className="space-y-3">
+              {/* Win Tiers Box */}
+              <div className="p-3 rounded-xl bg-gradient-to-r from-amber-950/40 via-stone-900/60 to-amber-950/40 border border-amber-600/30 text-xs">
+                <div className="font-bold text-amber-300 mb-1">Tingkat Kemenangan (Total Bet Multiplier):</div>
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-1.5 text-[11px] font-mono">
+                  <div className="p-1.5 rounded bg-stone-900 border border-stone-800 text-stone-300">
+                    <span className="text-amber-400 font-bold">10x - 24x:</span> BIG WIN
+                  </div>
+                  <div className="p-1.5 rounded bg-stone-900 border border-stone-800 text-amber-300">
+                    <span className="text-amber-400 font-bold">25x - 49x:</span> SUPER BIG
+                  </div>
+                  <div className="p-1.5 rounded bg-stone-900 border border-stone-800 text-yellow-300">
+                    <span className="text-amber-400 font-bold">50x - 99x:</span> MEGA WIN
+                  </div>
+                  <div className="p-1.5 rounded bg-stone-900 border border-stone-800 text-red-300">
+                    <span className="text-amber-400 font-bold">100x+:</span> EPIC WIN
+                  </div>
+                </div>
+              </div>
+
               <div className="text-xs text-stone-400">
-                Kemenangan dihitung dari simbol bersebelahan dari Reel 1 paling kiri ke kanan (3, 4, 5, 6 reels berturut-turut).
+                Nilai bayaran dikalikan dengan total taruhan (Total Bet). Simbol membayar di posisi mana saja pada papan perisai 24 ubin.
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                 {Object.values(SYMBOLS).map((sym) => (
@@ -185,35 +207,30 @@ export const PaytableModal: React.FC<PaytableModalProps> = ({
                   >
                     <div className="flex items-center gap-2.5">
                       <div
-                        className="w-10 h-10 rounded-lg flex items-center justify-center border overflow-hidden shrink-0"
-                        style={{ borderColor: sym.color }}
+                        className="w-12 h-12 rounded-lg flex items-center justify-center p-1 shrink-0 overflow-visible"
                       >
-                        {sym.image ? (
-                          <img src={sym.image} alt={sym.name} className="w-full h-full object-cover" />
-                        ) : (
-                          <span className="font-western font-bold text-sm" style={{ color: sym.color }}>
-                            {sym.id}
-                          </span>
-                        )}
+                        <SlotSymbolGraphic symbolId={sym.id} />
                       </div>
                       <div>
                         <div className="text-xs font-bold text-stone-200">{sym.name}</div>
                         <div className="text-[10px] text-stone-500">
                           {sym.isWild
-                            ? 'Wild: Pengganti semua simbol'
+                            ? 'WILD: Mewakili simbol terbanyak'
                             : sym.isScatter
-                            ? 'Scatter: 10 Free Spins & Level Up'
-                            : 'Simbol 3600 Ways'}
+                            ? 'SCATTER: 3+ = 10 Free Spins'
+                            : 'Pay Anywhere 6+'}
                         </div>
                       </div>
                     </div>
 
                     <div className="text-right text-[11px] font-mono text-amber-300">
-                      {sym.isScatter || sym.isWild ? (
-                        <div className="text-amber-400 font-bold">Special Symbol</div>
+                      {sym.isScatter ? (
+                        <div className="text-red-400 font-bold">3+ = 10 Free Spins</div>
+                      ) : sym.isWild ? (
+                        <div className="text-yellow-400 font-bold">All Columns</div>
                       ) : (
                         <div>
-                          3x: <b>{sym.payouts[0]}</b> · 4x: <b>{sym.payouts[1]}</b> · 5x: <b>{sym.payouts[2]}</b> · 6x: <b>{sym.payouts[3]}</b>
+                          6-7: <b>{sym.payouts[0]}x</b> · 8-9: <b>{sym.payouts[1]}x</b> · 10+: <b>{sym.payouts[2]}x</b>
                         </div>
                       )}
                     </div>
